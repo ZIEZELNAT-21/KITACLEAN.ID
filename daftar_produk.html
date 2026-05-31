@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Produk Parfum & Sanitasi - Kita Clean</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; } [x-cloak] { display: none !important; }</style>
+</head>
+<body class="bg-[#f0f9ff] text-slate-900 min-h-screen flex flex-col" x-data="{
+    cart: JSON.parse(localStorage.getItem('kitaclean_cart') || '[]'),
+    products: [
+        { id: 1, name: 'Morning Brew', price: 15000, img: 'assets/img/produk_morning_brew.jpeg', cat: 'sepatu', desc: 'Aroma kopi premium penangkal bau apek sepatu.' },
+        { id: 2, name: 'Sweet Dream', price: 15000, img: 'assets/img/produk_sweet_dream.jpeg', cat: 'helm', desc: 'Keharuman lavender relaksasi pelindung kuman helm.' },
+        { id: 3, name: 'Bubble Pop', price: 15000, img: 'assets/img/produk_bubble_pop.jpeg', cat: 'tas', desc: 'Sensasi manis permen karet menyegarkan serat kain tas.' },
+        { id: 4, name: 'Fresh Clean', price: 15000, img: 'assets/img/produk_morning_brew.jpeg', cat: 'sepatu', desc: 'Perpaduan mint & lemon segar bertenaga tinggi.' },
+        { id: 5, name: 'Cool Breeze', price: 15000, img: 'assets/img/produk_sweet_dream.jpeg', cat: 'helm', desc: 'Aroma sporty maskulin anti ketombe kulit kepala.' },
+        { id: 6, name: 'Kita Clean Care', price: 20000, img: 'assets/img/produk_bubble_pop.jpeg', cat: 'antibakteri', desc: 'Disinfektan spesialis kain medis berbasis Eucalyptus.' }
+    ],
+    addToCart(p) {
+        this.cart.push({ keyId: Date.now(), ...p });
+        localStorage.setItem('kitaclean_cart', JSON.stringify(this.cart));
+        alert(p.name + ' berhasil ditambahkan ke keranjang!');
+    }
+}">
+    <nav class="bg-[#e0f2fe]/90 backdrop-blur-md w-full border-b border-sky-100 sticky top-0 z-50 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+            <div class="flex justify-between h-20 items-center">
+                <a href="index.html" class="flex items-center"><img src="assets/img/logo_kitaclean_slogan.jpeg" class="h-14 mix-blend-multiply"></a>
+                <div class="hidden md:flex items-center space-x-8 text-base font-extrabold tracking-wide">
+                    <a href="index.html" class="text-slate-700 hover:text-[#4ca766]">Home</a>
+                    <a href="katalog.html" class="text-[#4ca766]">Katalog</a>
+                    <a href="about.html" class="text-slate-700 hover:text-[#4ca766]">Tentang Kami</a>
+                    <a href="lokasi.html" class="text-slate-700 hover:text-[#4ca766]">Lokasi</a>
+                    <a href="keranjang.html" class="relative p-1 text-slate-700 hover:text-[#4ca766]">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        <span class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold" x-text="cart.length" x-show="cart.length > 0"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-12 py-12">
+        <div class="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900">Semua Koleksi Produk</h1>
+                <p class="text-slate-500 text-sm font-medium mt-1">Solusi higienis praktis penunjang produktivitas harian.</p>
+            </div>
+            <a href="katalog.html" class="px-5 py-2.5 bg-white border border-slate-200 hover:border-slate-300 font-bold text-sm rounded-xl flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Lihat Per Kategori
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <template x-for="p in products" :key="p.id">
+                <div class="bg-white rounded-[24px] p-4 border border-slate-100 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="w-full aspect-square bg-slate-50 rounded-xl overflow-hidden mb-4 cursor-pointer" @click="window.location.href='detail_produk.html?id='+p.id">
+                            <img :src="p.img" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                        </div>
+                        <span class="text-[10px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md font-black uppercase tracking-wider" x-text="p.cat"></span>
+                        <h3 class="text-lg font-black text-slate-900 mt-2 uppercase cursor-pointer hover:text-[#4ca766]" x-text="p.name" @click="window.location.href='detail_produk.html?id='+p.id"></h3>
+                        <p class="text-slate-500 text-xs font-semibold mt-1 leading-relaxed line-clamp-2" x-text="p.desc"></p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-50 flex items-center justify-between gap-4">
+                        <span class="text-lg font-black text-[#4ca766]" x-text="'Rp' + p.price.toLocaleString('id-ID')"></span>
+                        <button @click="addToCart(p)" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl cursor-pointer transition">Tambah</button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400 font-medium mt-auto">
+        <p>© 2026 kitclean.id. Hak Cipta Dilindungi</p>
+    </footer>
+</body>
+</html>

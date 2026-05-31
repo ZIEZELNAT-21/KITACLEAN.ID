@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencari Lokasi Distribusi Toko - Kita Clean</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+</head>
+<body class="bg-[#f0f9ff] text-slate-900 min-h-screen flex flex-col">
+    <nav class="bg-white border-b h-20 px-6 flex justify-between items-center sticky top-0 z-50">
+        <a href="index.html"><img src="assets/img/logo_kitaclean_slogan.jpeg" class="h-14 mix-blend-multiply"></a>
+        <div class="flex items-center space-x-6 text-sm font-extrabold">
+            <a href="index.html" class="text-slate-700">Home</a>
+            <a href="katalog.html" class="text-slate-700">Kategori</a>
+            <a href="lokasi.html" class="text-[#4ca766]">Lokasi Kami</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-16 flex flex-col justify-center">
+        <div class="text-center mb-8">
+            <span class="text-xs font-black text-[#4ca766] uppercase tracking-widest">Store Locator</span>
+            <h1 class="text-3xl font-black uppercase text-slate-950 tracking-tight mt-1">Temukan Outlet Offline Kami</h1>
+            <p class="text-slate-500 font-medium text-xs mt-1">Kunjungi titik distribusi resmi kami untuk pembelian langsung di tempat secara aman.</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-xs space-y-6">
+            <div class="w-full h-80 sm:h-96 bg-slate-100 rounded-2xl overflow-hidden relative shadow-inner border border-slate-200">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.5634786227!2d106.84557999726563!3d-6.925825999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1m3!1d253459.7891317184!2d106.9255!3d-6.9214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid" class="absolute inset-0 w-full h-full border-0" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            <div class="px-2">
+                <h4 class="font-black text-slate-950 uppercase text-lg">Gudang Utama Kita Clean</h4>
+                <p class="text-slate-500 font-semibold text-xs sm:text-sm mt-0.5">Kec. Cibadak / Kota Sukabumi, Wilayah Jawa Barat, Indonesia.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400 font-medium">
+        <p>© 2026 kitclean.id. Hak Cipta Dilindungi</p>
+    </footer>
+</body>
+</html>

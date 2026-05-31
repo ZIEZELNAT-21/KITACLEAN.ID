@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kebijakan Layanan & Aturan - Kita Clean</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f0f9ff] text-slate-900 min-h-screen flex flex-col" x-data="{ activeAccordion: null }">
+    <nav class="bg-white border-b h-20 px-6 flex justify-between items-center sticky top-0 z-50">
+        <a href="index.html"><img src="assets/img/logo_kitaclean_slogan.jpeg" class="h-14 mix-blend-multiply"></a>
+        <a href="index.html" class="text-sm font-extrabold text-slate-700">Kembali Ke Home</a>
+    </nav>
+
+    <main class="flex-grow max-w-3xl w-full mx-auto px-4 py-16">
+        <div class="text-center mb-10">
+            <span class="text-xs font-black text-[#4ca766] uppercase tracking-widest">Legalitas Hukum Website</span>
+            <h1 class="text-3xl font-black uppercase text-slate-950 tracking-tight mt-1">Syarat & Kebijakan Ketentuan
+            </h1>
+        </div>
+
+        <div class="space-y-4 bg-white p-6 sm:p-8 rounded-[32px] border border-slate-100 shadow-xs">
+            <div class="border-b border-slate-100 pb-3">
+                <button @click="activeAccordion = (activeAccordion === 1 ? null : 1)"
+                    class="w-full flex justify-between items-center font-black text-slate-900 text-sm sm:text-base uppercase tracking-tight py-2 text-left cursor-pointer focus:outline-none">
+                    <span>1. Ketentuan Transaksi Penggunaan</span>
+                    <span class="text-lg text-slate-400 font-light" x-text="activeAccordion === 1 ? '−' : '+'"></span>
+                </button>
+                <div x-show="activeAccordion === 1" x-cloak x-transition
+                    class="mt-2 text-xs sm:text-sm text-slate-500 font-medium leading-relaxed space-y-2 px-1">
+                    <p>Seluruh transaksi pemesanan produk spray kebersihan di platform kitclean.id wajib diselesaikan
+                        pembayarannya dalam kurun waktu 1x24 jam sebelum invoice kedaluwarsa secara sistematis otomatis.
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-b border-slate-100 pb-3">
+                <button @click="activeAccordion = (activeAccordion === 2 ? null : 2)"
+                    class="w-full flex justify-between items-center font-black text-slate-900 text-sm sm:text-base uppercase tracking-tight py-2 text-left cursor-pointer focus:outline-none">
+                    <span>2. Kebijakan Retur Pengembalian Barang</span>
+                    <span class="text-lg text-slate-400 font-light" x-text="activeAccordion === 2 ? '−' : '+'"></span>
+                </button>
+                <div x-show="activeAccordion === 2" x-cloak x-transition
+                    class="mt-2 text-xs sm:text-sm text-slate-500 font-medium leading-relaxed space-y-2 px-1">
+                    <p>Klaim penggantian produk bocor akibat kesalahan kurir pengiriman wajib menyertakan bukti rekaman
+                        video pembongkaran paket utuh (unboxing) maksimal 2 hari kalender terhitung sejak kurir
+                        menyatakan barang tiba di lokasi tujuan.</p>
+                </div>
+            </div>
+
+            <div class="pb-2">
+                <button @click="activeAccordion = (activeAccordion === 3 ? null : 3)"
+                    class="w-full flex justify-between items-center font-black text-slate-900 text-sm sm:text-base uppercase tracking-tight py-2 text-left cursor-pointer focus:outline-none">
+                    <span>3. Jaminan Keamanan Data Privasi</span>
+                    <span class="text-lg text-slate-400 font-light" x-text="activeAccordion === 3 ? '−' : '+'"></span>
+                </button>
+                <div x-show="activeAccordion === 3" x-cloak x-transition
+                    class="mt-2 text-xs sm:text-sm text-slate-500 font-medium leading-relaxed space-y-2 px-1">
+                    <p>Kami sangat berkomitmen penuh menjaga kerahasiaan data otentikasi login email, sandi, serta
+                        riwayat alamat pengantaran kiriman barang milik Tuan Muda dan seluruh pelanggan agar terhindar
+                        dari penyalahgunaan digital pihak luar.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400 font-medium">
+        <p>© 2026 kitclean.id. Hak Cipta Dilindungi</p>
+    </footer>
+</body>
+
+</html>
