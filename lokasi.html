@@ -1,44 +1,273 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencari Lokasi Distribusi Toko - Kita Clean</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Lokasi Toko - Kita Clean</title>
+
+    <!-- Tailwind CSS v3 Stable CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js CDN -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .nav-bounce-effect {
+            display: inline-flex;
+            align-items: center;
+            transform: translateZ(0);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+        }
+
+        .nav-bounce-effect:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        .hover-brand {
+            transition: color 0.2s ease;
+        }
+
+        .hover-brand:hover {
+            color: #4ca766 !important;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </head>
-<body class="bg-[#f0f9ff] text-slate-900 min-h-screen flex flex-col">
-    <nav class="bg-white border-b h-20 px-6 flex justify-between items-center sticky top-0 z-50">
-        <a href="index.html"><img src="assets/img/logo_kitaclean_slogan.jpeg" class="h-14 mix-blend-multiply"></a>
-        <div class="flex items-center space-x-6 text-sm font-extrabold">
-            <a href="index.html" class="text-slate-700">Home</a>
-            <a href="katalog.html" class="text-slate-700">Kategori</a>
-            <a href="lokasi.html" class="text-[#4ca766]">Lokasi Kami</a>
+
+<body
+    class="bg-gradient-to-b from-[#e0f2fe] via-[#e0f2fe] to-white text-slate-900 min-h-screen flex flex-col pt-4 bg-no-repeat"
+    x-data="{ 
+        cart: JSON.parse(localStorage.getItem('kitaclean_cart') || '[]'),
+        showCartModal: false, openDropdown: false, mobileMenu: false,
+        updateCart() { localStorage.setItem('kitaclean_cart', JSON.stringify(this.cart)) }
+      }">
+
+    <!-- ================= NAVBAR ================= -->
+    <nav
+        class="sticky top-4 mx-4 sm:mx-10 lg:max-w-7xl lg:mx-auto bg-white rounded-3xl shadow-xl border border-sky-100 z-50 w-[calc(100%-2rem)] sm:w-[calc(100%-5rem)] lg:w-full">
+        <div class="px-6 sm:px-8 lg:px-10">
+            <div class="flex justify-between h-24 items-center">
+
+                <!-- LOGO BRAND -->
+                <a href="index.html"
+                    class="flex items-center h-24 transform transition duration-300 hover:-translate-y-1 hover:scale-105">
+                    <img src="assets/img/logo_kitaclean_slogan.jpeg" alt="Kita Clean Logo"
+                        class="h-24 w-auto object-contain py-2 mix-blend-multiply">
+                </a>
+
+                <!-- Desktop Menu Navigasi -->
+                <div class="hidden md:flex items-center space-x-8 text-lg font-extrabold tracking-wide">
+                    <a href="index.html" class="nav-bounce-effect text-slate-700 hover:text-[#4ca766]">Home</a>
+
+                    <!-- DROPDOWN KATALOG -->
+                    <div class="relative text-left" @mouseenter="openDropdown = true"
+                        @mouseleave="openDropdown = false">
+                        <a href="katalog.html"
+                            class="nav-bounce-effect hover-brand flex items-center gap-2 py-4 cursor-pointer text-slate-700">
+                            <span>Katalog</span>
+                            <svg class="w-4 h-4 transition-transform duration-200"
+                                :class="openDropdown ? 'rotate-180 text-[#4ca766]' : ''" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </a>
+
+                        <div x-show="openDropdown" x-cloak
+                            class="absolute left-1/2 -translate-x-1/2 mt-2 w-56 rounded-2xl bg-white shadow-2xl border-t-4 border-t-[#4ca766] border border-slate-200/60 py-3 z-50 flex flex-col space-y-1.5 px-2">
+                            <a href="katalog.html?cat=all"
+                                class="w-full block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-[#4ca766] rounded-xl font-black transition-all duration-200">Semua
+                                Produk</a>
+                            <a href="katalog.html?cat=sepatu"
+                                class="w-full block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-[#4ca766] rounded-xl font-black transition-all duration-200">Parfum
+                                Sepatu</a>
+                            <a href="katalog.html?cat=helm"
+                                class="w-full block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-[#4ca766] rounded-xl font-black transition-all duration-200">Parfum
+                                Helm</a>
+                        </div>
+                    </div>
+
+                    <a href="about.html" class="nav-bounce-effect text-slate-700 hover:text-[#4ca766]">Tentang Kami</a>
+                    <a href="lokasi.html" class="nav-bounce-effect text-[#4ca766]">Lokasi</a>
+
+                    <!-- KERANJANG -->
+                    <button @click="showCartModal = true"
+                        class="nav-bounce-effect hover-brand p-1 relative text-slate-700 cursor-pointer">
+                        <svg class="w-6.5 h-6.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        <span
+                            class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold"
+                            x-text="cart.length" x-show="cart.length > 0"></span>
+                    </button>
+
+                    <span class="h-6 w-px bg-slate-300/50"></span>
+
+                    <button
+                        class="nav-bounce-effect px-6 py-3 border-2 border-slate-300 hover:border-[#4ca766] text-slate-700 hover:text-[#4ca766] text-base font-extrabold rounded-xl bg-white shadow-sm">
+                        Login / Daftar
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Icon -->
+                <div class="flex md:hidden items-center">
+                    <button @click="mobileMenu = !mobileMenu" class="text-slate-700 hover-brand">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-16 flex flex-col justify-center">
-        <div class="text-center mb-8">
-            <span class="text-xs font-black text-[#4ca766] uppercase tracking-widest">Store Locator</span>
-            <h1 class="text-3xl font-black uppercase text-slate-950 tracking-tight mt-1">Temukan Outlet Offline Kami</h1>
-            <p class="text-slate-500 font-medium text-xs mt-1">Kunjungi titik distribusi resmi kami untuk pembelian langsung di tempat secara aman.</p>
-        </div>
-
-        <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-xs space-y-6">
-            <div class="w-full h-80 sm:h-96 bg-slate-100 rounded-2xl overflow-hidden relative shadow-inner border border-slate-200">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.5634786227!2d106.84557999726563!3d-6.925825999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1m3!1d253459.7891317184!2d106.9255!3d-6.9214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid" class="absolute inset-0 w-full h-full border-0" allowfullscreen="" loading="lazy"></iframe>
+    <!-- ================= CONTENT AREA LOKASI ================= -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-10 py-16">
+        <div class="bg-white rounded-[32px] shadow-xl border border-sky-100 p-6 md:p-12 space-y-10">
+            <div class="text-center">
+                <h1 class="text-4xl font-black text-slate-900 uppercase tracking-wide mb-4">Lokasi Kita Clean</h1>
+                <p class="text-slate-500 font-medium max-w-xl mx-auto leading-relaxed">
+                    Kunjungi toko atau titik distribusi resmi kami untuk mendapatkan produk sanitasi dan parfum premium
+                    secara langsung.
+                </p>
             </div>
-            <div class="px-2">
-                <h4 class="font-black text-slate-950 uppercase text-lg">Gudang Utama Kita Clean</h4>
-                <p class="text-slate-500 font-semibold text-xs sm:text-sm mt-0.5">Kec. Cibadak / Kota Sukabumi, Wilayah Jawa Barat, Indonesia.</p>
+
+            <!-- Tata Letak Info & Peta -->
+            <div class="grid lg:grid-cols-5 gap-8 items-stretch">
+                <!-- Info Kontak & Alamat -->
+                <div class="lg:col-span-2 flex flex-col gap-6 justify-between">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                            <h3
+                                class="font-black text-lg uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                                <span>📍</span> Alamat Utama
+                            </h3>
+                            <p class="text-sm text-slate-600 font-semibold leading-relaxed">
+                                Universitas Nusa Putra, Jl. Raya Cibolang Cisaat No.21, Cibolang Kaler, Kec. Cisaat,
+                                Kabupaten Sukabumi, Jawa Barat 43152.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                            <h3
+                                class="font-black text-lg uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                                <span>🕒</span> Jam Operasional
+                            </h3>
+                            <div class="text-sm text-slate-600 font-semibold space-y-1.5">
+                                <div class="flex justify-between"><span>Senin - Jumat</span><span>08:00 - 20:00</span>
+                                </div>
+                                <div class="flex justify-between"><span>Sabtu - Minggu</span><span>09:00 - 17:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#4ca766]/10 p-6 rounded-2xl border border-[#4ca766]/20 space-y-3">
+                        <h4 class="font-black text-sm uppercase tracking-wider text-[#3c8552]">Butuh Bantuan Rute?</h4>
+                        <p class="text-xs text-slate-600 font-medium leading-relaxed">Hubungi admin WhatsApp kami jika
+                            kamu kesulitan menemukan titik lokasi fisik toko kami.</p>
+                        <a href="https://wa.me/6288863740081" target="_blank"
+                            class="inline-block mt-1 text-xs font-black uppercase text-[#4ca766] hover:underline">Hubungi
+                            Admin &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- PETA GOOGLE MAPS YANG SUDAH DIPERBAIKI -->
+                <div
+                    class="lg:col-span-3 w-full min-h-[380px] bg-slate-100 rounded-3xl overflow-hidden border border-slate-200 shadow-inner relative">
+                    <iframe
+                        src="https://maps.google.com/maps?q=Nusa%20Putra%20University&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                        class="w-full h-full border-0 absolute inset-0" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
             </div>
         </div>
     </main>
 
-    <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400 font-medium">
-        <p>© 2026 kitclean.id. Hak Cipta Dilindungi</p>
+    <!-- ================= DRAWER KERANJANG ================= -->
+    <div class="fixed inset-0 z-50 flex justify-end" x-show="showCartModal" x-cloak x-transition>
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs" @click="showCartModal = false"></div>
+        <div class="relative w-full max-w-md bg-white h-full shadow-2xl p-6 flex flex-col z-10">
+            <div class="flex justify-between items-center pb-4 border-b">
+                <h2 class="text-2xl font-black uppercase">Keranjang</h2>
+                <button @click="showCartModal = false" class="text-3xl font-light cursor-pointer">×</button>
+            </div>
+            <div class="flex-grow overflow-y-auto py-4 space-y-4">
+                <template x-for="item in cart" :key="item.id">
+                    <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-2xl border">
+                        <img :src="item.img" class="w-16 h-16 object-cover rounded-xl" alt="Item">
+                        <div class="flex-grow">
+                            <h4 class="font-extrabold uppercase text-sm" x-text="item.name"></h4>
+                            <p class="text-[#4ca766] font-bold text-sm"
+                                x-text="'Rp' + item.price.toLocaleString('id-ID')"></p>
+                        </div>
+                        <button @click="cart = cart.filter(p => p.id !== item.id); updateCart()"
+                            class="text-red-500 p-2 cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </template>
+                <div x-show="cart.length === 0"
+                    class="h-full flex flex-col items-center justify-center text-slate-400 font-bold uppercase">
+                    Keranjang Kosong
+                </div>
+            </div>
+            <div class="pt-4 border-t" x-show="cart.length > 0">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-bold text-slate-500 uppercase">Total</span>
+                    <span class="text-xl font-black text-[#4ca766]"
+                        x-text="'Rp' + cart.reduce((sum, item) => sum + item.price, 0).toLocaleString('id-ID')"></span>
+                </div>
+                <a href="pembayaran.html"
+                    class="w-full block py-4 bg-[#4ca766] text-white text-center font-extrabold rounded-2xl uppercase tracking-wider shadow-md">
+                    Lanjutkan Checkout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-transparent text-slate-400 py-12 text-center text-xs font-bold tracking-wide mt-auto">
+        <div>&copy; 2026 kitclean.id. Hak Cipta Dilindungi</div>
     </footer>
+    <!-- TEMPEL DI PALING BAWAH FILE KATALOG.HTML DAN LOKASI.HTML (DI ATAS TAG </body>) -->
+    <script>
+        // Mendengarkan semua klik di halaman secara live tanpa peduli kapan tombolnya dimuat
+        document.addEventListener("click", function (event) {
+            // Cari elemen tag <a> atau <button> terdekat yang sedang diklik oleh user
+            const tombolLogin = event.target.closest("a, button");
+
+            if (tombolLogin) {
+                const teksTombol = tombolLogin.textContent.toLowerCase();
+
+                // Jika tombol yang diklik mengandung kata 'login' atau 'daftar'
+                if (teksTombol.includes("login") || teksTeombol.includes("daftar")) {
+                    event.preventDefault(); // Hentikan link bawaan yang rusak/salah alamat
+                    window.location.href = "login.html"; // Paksa beralih ke halaman login baru Anda
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>

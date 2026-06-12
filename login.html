@@ -4,11 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk & Daftar Akun - Kita Clean</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Daftar & Login - Kita Clean</title>
+
+    <!-- Tailwind CSS v3 Stable -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js Core -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap"
         rel="stylesheet">
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -20,80 +29,146 @@
     </style>
 </head>
 
-<body class="bg-[#f0f9ff] text-slate-900 min-h-screen flex items-center justify-center p-4 sm:p-6"
-    x-data="{ isLogin: true }">
-    <div
-        class="bg-white w-full max-w-5xl rounded-[32px] shadow-xl border border-sky-100 overflow-hidden grid md:grid-cols-2">
-        <div class="hidden md:flex flex-col justify-between p-12 bg-linear-to-br from-[#e0f2fe] to-[#bae6fd] relative">
-            <div
-                class="absolute inset-0 opacity-10 bg-[radial-gradient(#4ca766_1px,transparent_1px)] [background-size:16px_16px]">
-            </div>
-            <a href="index.html" class="relative z-10 block">
-                <img src="assets/img/logo_kitaclean_slogan.jpeg" alt="Kita Clean" class="h-14 mix-blend-multiply">
+<body class="bg-[#eef4fa] min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
+
+    <!-- MAIN CONTAINER CARD -->
+    <div class="bg-white w-full max-w-5xl rounded-[32px] shadow-[0_25px_70px_-15px_rgba(135,165,195,0.2)] border border-white/80 overflow-hidden grid grid-cols-1 md:grid-cols-2 min-h-[650px]"
+        x-data="{ isLogin: false, showPassword: false }">
+
+        <!-- ================= PANEL KIRI: PURE WHITE BRANDING ================= -->
+        <div
+            class="bg-white p-8 sm:p-12 flex flex-col justify-between items-start relative min-h-[580px] md:min-h-auto">
+
+            <!-- Logo Brand Atas (Logo Kita Clean Mini) -->
+            <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
+                <div
+                    class="w-8 h-8 rounded-lg overflow-hidden bg-white flex items-center justify-center border border-slate-100 shadow-sm">
+                    <img src="assets/img/logo_kitaclean_slogan.jpeg" alt="Kita Clean Mini Logo"
+                        class="w-full h-full object-contain">
+                </div>
+                <span
+                    class="text-[#334155] font-extrabold text-base tracking-tight group-hover:text-slate-500 transition">kitaclean.id</span>
             </a>
-            <div class="relative z-10 my-auto space-y-4">
-                <h1 class="text-4xl font-black uppercase text-slate-900 tracking-tight leading-tight">
-                    Anti Bau.<br>Anti Bakteri.<br><span class="text-[#4ca766]">Fresh Seharian.</span>
+
+            <!-- Judul & Slogan -->
+            <div class="w-full mt-6">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-[#1e293b] tracking-tight"
+                    x-text="isLogin ? 'Selamat Datang!' : 'Daftar Sekarang!'">
                 </h1>
-                <p class="text-slate-600 font-semibold text-sm max-w-sm">Dapatkan akses penuh ke koleksi pembersih dan
-                    pewangi premium untuk menunjang kepercayaan diri aktivitas harianmu.</p>
-            </div>
-            <div class="relative z-10 text-xs text-slate-500 font-bold uppercase tracking-wider">© 2026 kitclean.id
-            </div>
-        </div>
-
-        <div class="p-8 sm:p-12 flex flex-col justify-center">
-            <div class="mb-8 md:hidden text-center">
-                <img src="assets/img/logo_kitaclean_slogan.jpeg" alt="Kita Clean"
-                    class="h-12 mix-blend-multiply mx-auto mb-4">
-            </div>
-
-            <div class="mb-6">
-                <h2 class="text-3xl font-black text-slate-950 uppercase tracking-tight"
-                    x-text="isLogin ? 'Selamat Datang' : 'Buat Akun Baru'"></h2>
-                <p class="text-slate-500 text-sm font-medium mt-1"
-                    x-text="isLogin ? 'Silakan masuk menggunakan akun terdaftar Anda.' : 'Lengkapi data di bawah ini untuk mendaftar.'">
+                <p class="text-sm text-slate-400 font-medium mt-2"
+                    x-text="isLogin ? 'Masuk kembali ke akun Anda untuk melanjutkan belanja.' : 'Bersih Itu Kita, Kita Itu Bersih! Taindaah!'">
                 </p>
             </div>
 
-            <form
-                @submit.prevent="alert(isLogin ? 'Berhasil Masuk!' : 'Pendaftaran Berhasil!'); window.location.href='index.html'"
-                class="space-y-4">
-                <div x-show="!isLogin" x-cloak x-transition>
-                    <label class="block text-xs font-black uppercase text-slate-700 tracking-wider mb-1.5">Nama
-                        Lengkap</label>
-                    <input type="text" :required="!isLogin"
-                        class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-[#4ca766] focus:bg-white font-semibold transition text-sm">
+            <!-- ILUSTRASI LOGO UTAMA DI TENGAH -->
+            <div class="w-full flex items-center justify-center my-6">
+                <div class="w-full max-w-[280px] aspect-square flex items-center justify-center">
+                    <img src="assets/img/logo_kitaclean_slogan.jpeg" alt="Kita Clean Big Logo"
+                        class="w-full h-full object-contain mix-blend-multiply">
                 </div>
-                <div>
-                    <label class="block text-xs font-black uppercase text-slate-700 tracking-wider mb-1.5">Alamat
-                        Email</label>
-                    <input type="email" required
-                        class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-[#4ca766] focus:bg-white font-semibold transition text-sm">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label class="block text-xs font-black uppercase text-slate-700 tracking-wider">Password</label>
-                        <a href="#" x-show="isLogin" class="text-xs font-bold text-[#4ca766] hover:underline">Lupa
-                            Password?</a>
-                    </div>
-                    <input type="password" required
-                        class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-[#4ca766] focus:bg-white font-semibold transition text-sm">
-                </div>
-                <div class="pt-2">
-                    <button type="submit"
-                        class="w-full py-4 bg-[#4ca766] hover:bg-[#3f9154] text-white font-black uppercase rounded-xl tracking-widest shadow-md cursor-pointer transition active:scale-98 text-sm"
-                        x-text="isLogin ? 'Masuk Sekarang' : 'Daftar Akun'"></button>
-                </div>
-            </form>
+            </div>
 
-            <div class="mt-8 text-center text-sm font-semibold text-slate-500 border-t border-slate-100 pt-6">
-                <span x-text="isLogin ? 'Belum bergabung dengan kami?' : 'Sudah memiliki akun?'"></span>
-                <button @click="isLogin = !isLogin"
-                    class="text-[#4ca766] font-black ml-1 cursor-pointer hover:underline focus:outline-none"
-                    x-text="isLogin ? 'Daftar Di Sini' : 'Masuk Di Sini'"></button>
+            <!-- Teks Bawah Tengah -->
+            <div class="w-full text-center pt-2">
+                <p class="text-3xl font-extrabold text-[#1e293b] tracking-tight"
+                    x-text="isLogin ? 'Yuk, Mulai!' : 'Ayo Mulai!'">
+                </p>
             </div>
         </div>
+
+        <!-- ================= PANEL KANAN: ICE BLUE WITH FLOATING CARD ================= -->
+        <div
+            class="bg-[#e9f2fa] p-6 sm:p-10 md:p-12 flex items-center justify-center relative min-h-[580px] md:min-h-auto">
+
+            <!-- AKSEN DAUN DEKORATIF -->
+            <div
+                class="absolute top-4 right-12 text-emerald-400/20 text-3xl select-none pointer-events-none hidden sm:block">
+                🍃</div>
+            <div
+                class="absolute bottom-6 left-8 text-[#54b4e6]/30 text-3xl select-none pointer-events-none hidden sm:block">
+                💎</div>
+            <div
+                class="absolute bottom-6 left-16 text-emerald-400/30 text-2xl select-none pointer-events-none hidden sm:block">
+                🌱</div>
+
+            <!-- KARTU FORM PUTIH MENGAMBANG -->
+            <div
+                class="bg-white w-full max-w-[380px] rounded-[24px] shadow-[0_15px_35px_rgba(100,125,150,0.08)] border border-white/60 p-7 sm:p-8 relative z-10">
+
+                <!-- Judul Form Dinamis -->
+                <h2 class="text-2xl font-bold text-[#1e293b] text-center mb-6 tracking-tight"
+                    x-text="isLogin ? 'Masuk Akun' : 'Buat Akun'">
+                </h2>
+
+                <!-- Form Submit Action -->
+                <form @submit.prevent="window.location.href='index.html'" class="space-y-4">
+
+                    <!-- INPUT NAMA (Hanya Muncul saat Mode Daftar) -->
+                    <div x-show="!isLogin" x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 transform -translate-y-1" class="space-y-1.5">
+                        <label class="text-sm font-semibold text-slate-700 block pl-0.5">Nama</label>
+                        <input type="text" placeholder="Masukkan nama Anda"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#54b4e6] focus:ring-2 focus:ring-sky-100 transition bg-slate-50/30">
+                    </div>
+
+                    <!-- INPUT EMAIL -->
+                    <div class="space-y-1.5">
+                        <label class="text-sm font-semibold text-slate-700 block pl-0.5">Email</label>
+                        <input type="email" required placeholder="Masukkan email Anda"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#54b4e6] focus:ring-2 focus:ring-sky-100 transition bg-slate-50/30">
+                    </div>
+
+                    <!-- INPUT PASSWORD -->
+                    <div class="space-y-1.5">
+                        <label class="text-sm font-semibold text-slate-700 block pl-0.5">Password</label>
+                        <div class="relative">
+                            <input :type="showPassword ? 'text' : 'password'" required placeholder="Masukkan password"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#54b4e6] focus:ring-2 focus:ring-sky-100 transition bg-slate-50/30 pr-10">
+
+                            <!-- Tombol Icon Mata Lihat Sandi -->
+                            <button type="button" @click="showPassword = !showPassword"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+                                <svg x-show="!showPassword" class="w-4 h-4" fill="none" stroke="currentColor"
+                                    stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                    </path>
+                                </svg>
+                                <svg x-show="showPassword" x-cloak class="w-4 h-4" fill="none" stroke="currentColor"
+                                    stroke-width="2" viewBox="0 0 24 24">
+                                    <path
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.025 10.025 0 01-4.132 5.4M9.9 4.24A9.124 9.124 0 0112 4c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.4M3 3l18 18M9.172 9.172a4 4 0 005.656 5.656">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TEKS LUPA SANDI (Sudah Diperbaiki menjadi Bahasa Indonesia yang Benar) -->
+                    <div class="text-left pt-0.5">
+                        <a href="#" class="text-xs font-semibold text-slate-400 hover:text-[#54b4e6] transition">Lupa
+                            password?</a>
+                    </div>
+
+                    <!-- TOMBOL UTAMA DINAMIS -->
+                    <button type="submit"
+                        class="w-full mt-3 py-3 bg-[#54b4e6] hover:bg-[#43a3d5] text-white text-sm font-bold rounded-xl transition shadow-sm cursor-pointer text-center tracking-wide"
+                        x-text="isLogin ? 'Masuk' : 'Buat Akun'">
+                    </button>
+                </form>
+
+                <!-- FOOTER SWITCH BUTTON (Sudah Diperbaiki & Berganti Otomatis Sesuai State Form) -->
+                <div class="mt-5 text-center pt-2">
+                    <button type="button" @click="isLogin = !isLogin"
+                        class="text-xs font-bold text-slate-500 hover:text-[#54b4e6] transition cursor-pointer"
+                        x-text="isLogin ? 'Belum punya akun? Daftar sekarang' : 'Sudah punya akun? Masuk disini'">
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </body>
 

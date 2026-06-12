@@ -5,22 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Kategori - Kita Clean</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Tailwind CSS v3 Stable CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js Core CDN -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        .card-bounce {
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        .nav-bounce-effect {
+            display: inline-flex;
+            align-items: center;
+            transform: translateZ(0);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
         }
 
-        .card-bounce:hover {
-            transform: translateY(-6px) scale(1.015);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05);
+        .nav-bounce-effect:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        .hover-brand {
+            transition: color 0.2s ease;
+        }
+
+        .hover-brand:hover {
+            color: #4ca766 !important;
         }
 
         [x-cloak] {
@@ -29,125 +48,487 @@
     </style>
 </head>
 
-<body class="bg-[#f0f9ff] text-slate-900 min-h-screen flex flex-col" x-data="{ 
-    openDropdown: false, mobileMenu: false, showEduModal: false, selectedCategory: {},
-    categoriesData: {
-        sepatu: { title: 'Perawatan Sepatu', bg: '#e2edf7', variants: 'Morning Brew (Kopi), Fresh Clean (Mint & Lemon)', effectiveness: 'Sangat efektif menekan bau apek hingga 12–24 jam penggunaan aktif.', steps: ['Pastikan kondisi dalam sepatu tidak basah kuyup.', 'Semprotkan langsung ke dalam sepatu (insole) sebanyak 2-3 kali.', 'Tunggu 3-5 menit hingga meresap.'], dos: 'Bagian dalam sepatu (insole), kaos kaki, dan sepatu kanvas.', donts: 'Jangan menyemprot terlalu banyak pada permukaan luar kulit asli.' },
-        helm: { title: 'Higiene Helm', bg: '#e2ece4', variants: 'Cool Breeze (Sporty), Sweet Dream (Lavender)', effectiveness: 'Mampu membunuh kuman penyebab gatal di kulit kepala hingga 99%.', steps: ['Buka kaca (visor) helm selebar mungkin.', 'Semprotkan merata pada busa pipi kanan-kiri dan busa atas dalam.', 'Biarkan helm diangin-anginkan dalam posisi terbuka.'], dos: 'Seluruh lapisan kain busa bagian dalam helm dan tali pengikat.', donts: 'Jangan semprotkan langsung pada kaca helm (visor) bagian dalam.' },
-        tas: { title: 'Penyegar Tas', bg: '#e6e9ee', variants: 'Bubble Pop (Bubblegum), White Tea & Sage', effectiveness: 'Menghilangkan bau sisa makanan atau ruang penyimpanan lemari lembap.', steps: ['Kosongkan tas dari benda-benda kertas atau elektronik.', 'Semprotkan tipis-tipis pada kompartemen utama.', 'Biarkan tas dalam kondisi terbuka selama beberapa menit.'], dos: 'Lapisan kain dalam (lining), tas kanvas, tas ransel cordura.', donts: 'Jangan disemprotkan langsung pada barang elektronik atau dokumen kertas.' },
-        antibakteri: { title: 'Anti Bakteri Spesialis', bg: '#e8eaf2', variants: 'Kita Clean Care - Eucalyptus & Tea Tree', effectiveness: 'Efektivitas tingkat tinggi medis untuk mematikan virus, kuman, dan jamur.', steps: ['Semprotkan secara merata pada benda publik atau kain.', 'Biarkan mengering dengan sendirinya tanpa perlu dibilas.'], dos: 'Jaket ojek online, sarung tangan motor, sajadah travel.', donts: 'Jangan disemprotkan pada wajah, mata, atau luka terbuka.' }
-    },
-    openEdu(key) { this.selectedCategory = this.categoriesData[key]; this.showEduModal = true; this.mobileMenu = false; }
-}">
-    <nav class="bg-[#e0f2fe]/90 backdrop-blur-md w-full border-b border-sky-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
-            <a href="index.html"><img src="assets/img/logo_kitaclean_slogan.jpeg" class="h-14 mix-blend-multiply"></a>
-            <div class="hidden md:flex items-center space-x-8 font-extrabold text-sm">
-                <a href="index.html" class="text-slate-700">Home</a>
-                <a href="daftar_produk.html" class="text-slate-700">Semua Produk</a>
-                <button @click="openEdu('sepatu')" class="text-[#4ca766] cursor-pointer">Panduan Edukasi</button>
-                <a href="about.html" class="text-slate-700">Tentang Kami</a>
+<body
+    class="bg-gradient-to-b from-[#e0f2fe] via-[#e0f2fe] to-white text-slate-900 min-h-screen flex flex-col pt-4 bg-no-repeat relative overflow-x-hidden"
+    x-data="{ 
+        cart: JSON.parse(localStorage.getItem('kitaclean_cart') || '[]'),
+        showCartModal: false, 
+        openDropdown: false, 
+        mobileMenu: false,
+        updateCart() { localStorage.setItem('kitaclean_cart', JSON.stringify(this.cart)) }
+      }">
+
+    <!-- DEKORASI GELEMBUNG SABUN ELEGAN -->
+    <div
+        class="absolute right-4 top-1/3 w-8 h-8 rounded-full border-2 border-sky-300/40 bg-white/20 pointer-events-none hidden sm:block">
+    </div>
+    <div
+        class="absolute right-8 top-[36%] w-5 h-5 rounded-full border-2 border-sky-300/30 bg-white/10 pointer-events-none hidden sm:block">
+    </div>
+    <div
+        class="absolute right-3 top-[42%] w-4 h-4 rounded-full border border-sky-300/40 bg-white/20 pointer-events-none hidden sm:block">
+    </div>
+    <div
+        class="absolute left-4 top-1/2 w-7 h-7 rounded-full border-2 border-sky-300/30 bg-white/10 pointer-events-none hidden sm:block">
+    </div>
+
+    <!-- ================= NAVBAR SECTION ================= -->
+    <nav
+        class="sticky top-4 mx-4 sm:mx-10 lg:max-w-7xl lg:mx-auto bg-white rounded-3xl shadow-xl border border-sky-100 z-50 w-[calc(100%-2rem)] sm:w-[calc(100%-5rem)] lg:w-full">
+        <div class="px-6 sm:px-8 lg:px-10">
+            <div class="flex justify-between h-24 items-center">
+
+                <!-- LOGO BRAND -->
+                <a href="index.html"
+                    class="flex items-center h-24 transform transition duration-300 hover:-translate-y-1 hover:scale-105">
+                    <img src="assets/img/logo_kitaclean_slogan.jpeg" alt="Kita Clean Logo"
+                        class="h-24 w-auto object-contain py-2 mix-blend-multiply">
+                </a>
+
+                <!-- Desktop Menu Navigasi -->
+                <div class="hidden md:flex items-center space-x-8 text-lg font-extrabold tracking-wide">
+                    <a href="index.html" class="nav-bounce-effect text-slate-700 hover:text-[#4ca766]">Home</a>
+                    <a href="katalog.html" class="nav-bounce-effect text-[#4ca766]">Katalog</a>
+                    <a href="about.html" class="nav-bounce-effect text-slate-700 hover:text-[#4ca766]">Tentang Kami</a>
+                    <a href="lokasi.html" class="nav-bounce-effect text-slate-700 hover:text-[#4ca766]">Lokasi</a>
+
+                    <!-- BUTTON KERANJANG -->
+                    <button @click="showCartModal = true"
+                        class="nav-bounce-effect hover-brand p-1 relative text-slate-700 cursor-pointer">
+                        <svg class="w-6.5 h-6.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        <span
+                            class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold"
+                            x-text="cart.length" x-show="cart.length > 0"></span>
+                    </button>
+
+                    <span class="h-6 w-px bg-slate-300/50"></span>
+
+                    <button
+                        class="nav-bounce-effect px-6 py-3 border-2 border-slate-300 hover:border-[#4ca766] text-slate-700 hover:text-[#4ca766] text-base font-extrabold rounded-xl bg-white shadow-sm">
+                        Login / Daftar
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Icon -->
+                <div class="flex md:hidden items-center">
+                    <button @click="mobileMenu = !mobileMenu" class="text-slate-700 hover-brand">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-10 flex flex-col justify-center">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div @click="openEdu('sepatu')"
-                class="card-bounce bg-[#e2edf7] rounded-[32px] p-8 flex flex-col justify-between min-h-[300px] cursor-pointer group">
-                <div class="w-full flex justify-center"><svg class="w-24 h-24 text-slate-800" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"
-                            d="M21 16V8a2 2 0 00-1.35-1.9l-6-2a2 2 0 00-1.3 0l-6 2A2 2 0 005 8v8a2 2 0 001.35 1.9l6 2a2 2 0 001.3 0l6-2A2 2 0 0021 16z">
-                        </path>
-                    </svg></div>
-                <div class="flex justify-between items-end">
-                    <h2 class="text-2xl font-black text-slate-900 uppercase">Perawatan<br>Sepatu</h2>
-                    <div class="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center">→</div>
+    <!-- ================= MAIN AREA: INTERACTIVE GRID ================= -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-6 py-16">
+
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-black text-slate-900 uppercase tracking-tight">Katalog Utama</h1>
+            <p class="text-sm text-slate-500 font-bold mt-2 uppercase tracking-wide">Klik kartu kategori untuk melihat
+                detail isi produk atau informasi!</p>
+        </div>
+
+        <!-- GRID UTAMA KATEGORI -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- 1. KATEGORI PERAWATAN SEPATU -->
+            <div x-data="{ open: false }"
+                class="bg-[#e4eff9] border border-sky-200 rounded-[36px] p-6 flex flex-col justify-between min-h-[420px] shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+
+                <div x-show="!open" class="h-full flex flex-col justify-between items-start w-full cursor-pointer"
+                    @click="open = true">
+                    <div class="w-full flex justify-center py-6 relative">
+                        <div class="absolute w-32 h-32 bg-sky-400/20 blur-2xl rounded-full"></div>
+                        <div class="text-7xl filter drop-shadow-md">👟</div>
+                    </div>
+                    <div class="w-full flex justify-between items-end mt-4">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-950 tracking-tight mb-1">Perawatan Sepatu</h2>
+                            <span
+                                class="text-sky-700 text-xs font-black uppercase tracking-wider bg-sky-200/60 px-3 py-1 rounded-full">Lihat
+                                Koleksi &rarr;</span>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-slate-950 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md">
+                            ➔</div>
+                    </div>
+                </div>
+
+                <div x-show="open" x-cloak class="h-full flex flex-col justify-between w-full">
+                    <div class="flex justify-between items-center pb-3 border-b border-sky-200/60">
+                        <span class="font-black text-sm uppercase text-sky-900 tracking-wider">Koleksi Sepatu</span>
+                        <button @click="open = false"
+                            class="px-3 py-1 bg-white hover:bg-slate-100 text-xs font-black rounded-lg uppercase border border-sky-300 shadow-xs">&larr;
+                            Kembali</button>
+                    </div>
+                    <div class="flex-grow py-4 grid grid-cols-2 gap-3 overflow-y-auto">
+                        <div
+                            class="bg-white p-3 rounded-2xl shadow-sm flex flex-col items-center justify-between text-center border border-white">
+                            <img src="assets/img/produk_morning_brew.jpeg"
+                                class="w-20 h-20 object-cover rounded-xl shadow-xs">
+                            <h4 class="font-black text-xs uppercase text-slate-900 mt-2">Morning Brew</h4>
+                            <span class="text-xs font-bold text-[#4ca766] mt-1">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Morning Brew (Sepatu)', price: 15000, img: 'assets/img/produk_morning_brew.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1.5 bg-slate-900 hover:bg-black text-white text-[10px] font-black rounded-lg uppercase tracking-wider transition">
+                                + Beli
+                            </button>
+                        </div>
+                        <div
+                            class="bg-white p-3 rounded-2xl shadow-sm flex flex-col items-center justify-between text-center border border-white">
+                            <img src="assets/img/produk_bubble_pop.jpeg"
+                                class="w-20 h-20 object-cover rounded-xl shadow-xs">
+                            <h4 class="font-black text-xs uppercase text-slate-900 mt-2">Bubble Pop</h4>
+                            <span class="text-xs font-bold text-[#4ca766] mt-1">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Bubble Pop (Sepatu)', price: 15000, img: 'assets/img/produk_bubble_pop.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1.5 bg-slate-900 hover:bg-black text-white text-[10px] font-black rounded-lg uppercase tracking-wider transition">
+                                + Beli
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div @click="openEdu('helm')"
-                class="card-bounce bg-[#e2ece4] rounded-[32px] p-8 flex flex-col justify-between min-h-[300px] cursor-pointer group">
-                <div class="w-full flex justify-center"><svg class="w-24 h-24 text-slate-800" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"
-                            d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    </svg></div>
-                <div class="flex justify-between items-end">
-                    <h2 class="text-2xl font-black text-slate-900 uppercase">Higiene<br>Helm</h2>
-                    <div class="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center">→</div>
+
+            <!-- 2. KATEGORI HIGIENE HELM (IKON FIXED & JELAS) -->
+            <div x-data="{ open: false }"
+                class="bg-[#e1f2e7] border border-emerald-200 rounded-[36px] p-6 flex flex-col justify-between min-h-[420px] shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+
+                <div x-show="!open" class="h-full flex flex-col justify-between items-start w-full cursor-pointer"
+                    @click="open = true">
+                    <div class="w-full flex flex-col items-center justify-center py-6 relative">
+                        <div class="absolute w-32 h-32 bg-emerald-400/20 blur-2xl rounded-full"></div>
+
+                        <!-- VECTOR HELM MODERN & VISIBLE -->
+                        <svg class="w-24 h-24 text-emerald-800 filter drop-shadow-md" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M12 21a9 9 0 0 0 9-9c0-4.97-4.03-9-9-9s-9 4.03-9 9a9 9 0 0 0 3 6.7L4 21l3.3-1A8.95 8.95 0 0 0 12 21z"
+                                fill="#f0fdf4" />
+                            <path d="M6 12c1-2 3-3 6-3s5 1 6 3v1H6v-1z" fill="currentColor" fill-opacity="0.2" />
+                            <path d="M8 16h8" />
+                        </svg>
+                    </div>
+                    <div class="w-full flex justify-between items-end mt-4">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-950 tracking-tight mb-1">Higiene Helm</h2>
+                            <span
+                                class="text-emerald-700 text-xs font-black uppercase tracking-wider bg-emerald-200/60 px-3 py-1 rounded-full">Lihat
+                                Koleksi &rarr;</span>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-slate-950 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md">
+                            ➔</div>
+                    </div>
+                </div>
+
+                <div x-show="open" x-cloak class="h-full flex flex-col justify-between w-full">
+                    <div class="flex justify-between items-center pb-3 border-b border-emerald-200/60">
+                        <span class="font-black text-sm uppercase text-emerald-900 tracking-wider">Koleksi Helm</span>
+                        <button @click="open = false"
+                            class="px-3 py-1 bg-white hover:bg-slate-100 text-xs font-black rounded-lg uppercase border border-emerald-300 shadow-xs">&larr;
+                            Kembali</button>
+                    </div>
+                    <div class="flex-grow py-4 grid grid-cols-2 gap-3 overflow-y-auto">
+                        <div
+                            class="bg-white p-3 rounded-2xl shadow-sm flex flex-col items-center justify-between text-center border border-white">
+                            <img src="assets/img/produk_morning_brew.jpeg"
+                                class="w-20 h-20 object-cover rounded-xl shadow-xs">
+                            <h4 class="font-black text-xs uppercase text-slate-900 mt-2">Morning Brew</h4>
+                            <span class="text-xs font-bold text-[#4ca766] mt-1">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Morning Brew (Helm)', price: 15000, img: 'assets/img/produk_morning_brew.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1.5 bg-slate-900 hover:bg-black text-white text-[10px] font-black rounded-lg uppercase tracking-wider transition">
+                                + Beli
+                            </button>
+                        </div>
+                        <div
+                            class="bg-white p-3 rounded-2xl shadow-sm flex flex-col items-center justify-between text-center border border-white">
+                            <img src="assets/img/produk_sweet_dream.jpeg"
+                                class="w-20 h-20 object-cover rounded-xl shadow-xs">
+                            <h4 class="font-black text-xs uppercase text-slate-900 mt-2">Sweet Dream</h4>
+                            <span class="text-xs font-bold text-[#4ca766] mt-1">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Sweet Dream (Helm)', price: 15000, img: 'assets/img/produk_sweet_dream.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1.5 bg-slate-900 hover:bg-black text-white text-[10px] font-black rounded-lg uppercase tracking-wider transition">
+                                + Beli
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div @click="openEdu('tas')"
-                class="card-bounce bg-[#e6e9ee] rounded-[32px] p-8 flex flex-col justify-between min-h-[300px] cursor-pointer group">
-                <div class="w-full flex justify-center"><svg class="w-24 h-24 text-slate-800" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"
-                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                    </svg></div>
-                <div class="flex justify-between items-end">
-                    <h2 class="text-2xl font-black text-slate-900 uppercase">Penyegar<br>Tas</h2>
-                    <div class="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center">→</div>
+
+            <!-- 3. KATEGORI PENYEGAR TAS -->
+            <div x-data="{ open: false }"
+                class="bg-[#e9ecf0] border border-slate-300/70 rounded-[36px] p-6 flex flex-col justify-between min-h-[420px] shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+
+                <div x-show="!open" class="h-full flex flex-col justify-between items-start w-full cursor-pointer"
+                    @click="open = true">
+                    <div class="w-full flex justify-center py-6 relative">
+                        <div class="absolute w-32 h-32 bg-slate-400/20 blur-2xl rounded-full"></div>
+                        <div class="text-7xl filter drop-shadow-md">🎒</div>
+                    </div>
+                    <div class="w-full flex justify-between items-end mt-4">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-950 tracking-tight mb-1">Penyegar Tas</h2>
+                            <span
+                                class="text-slate-700 text-xs font-black uppercase tracking-wider bg-slate-200 px-3 py-1 rounded-full">Lihat
+                                Koleksi &rarr;</span>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-slate-950 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md">
+                            ➔</div>
+                    </div>
+                </div>
+
+                <div x-show="open" x-cloak class="h-full flex flex-col justify-between w-full">
+                    <div class="flex justify-between items-center pb-3 border-b border-slate-300">
+                        <span class="font-black text-sm uppercase text-slate-900 tracking-wider">Koleksi Tas</span>
+                        <button @click="open = false"
+                            class="px-3 py-1 bg-white hover:bg-slate-100 text-xs font-black rounded-lg uppercase border border-slate-300 shadow-xs">&larr;
+                            Kembali</button>
+                    </div>
+
+                    <div class="flex-grow py-4 grid grid-cols-2 gap-3 overflow-y-auto">
+                        <div
+                            class="bg-white p-3 rounded-2xl shadow-sm flex flex-col items-center justify-between text-center border border-white">
+                            <img src="assets/img/produk_morning_brew.jpeg"
+                                class="w-20 h-20 object-cover rounded-xl shadow-xs">
+                            <h4 class="font-black text-xs uppercase text-slate-900 mt-2">Morning Brew</h4>
+                            <span class="text-xs font-bold text-[#4ca766] mt-1">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Morning Brew (Tas)', price: 15000, img: 'assets/img/produk_morning_brew.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1.5 bg-slate-900 hover:bg-black text-white text-[10px] font-black rounded-lg uppercase tracking-wider transition">
+                                + Beli
+                            </button>
+                        </div>
+                        <div
+                            class="bg-white p-3 rounded-2xl shadow-sm flex flex-col items-center justify-between text-center border border-white">
+                            <img src="assets/img/produk_bubble_pop.jpeg"
+                                class="w-20 h-20 object-cover rounded-xl shadow-xs">
+                            <h4 class="font-black text-xs uppercase text-slate-900 mt-2">Bubble Pop</h4>
+                            <span class="text-xs font-bold text-[#4ca766] mt-1">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Bubble Pop (Tas)', price: 15000, img: 'assets/img/produk_bubble_pop.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1.5 bg-slate-900 hover:bg-black text-white text-[10px] font-black rounded-lg uppercase tracking-wider transition">
+                                + Beli
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div @click="openEdu('antibakteri')"
-                class="card-bounce bg-[#e8eaf2] rounded-[32px] p-8 flex flex-col justify-between min-h-[300px] cursor-pointer group">
-                <div class="w-full flex justify-center"><svg class="w-24 h-24 text-slate-800" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"
-                            d="M12 4v1m0 14v1m8-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-11.314l.707.707m11.314 11.314l.707-.707M12 15a3 3 0 110-6 3 3 0 010 6z">
-                        </path>
-                    </svg></div>
-                <div class="flex justify-between items-end">
-                    <h2 class="text-2xl font-black text-slate-900 uppercase">Anti Bakteri<br>Spesialis</h2>
-                    <div class="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center">→</div>
+
+            <!-- 4. KATEGORI TENTANG PRODUK (MURNI INFORMASI TANPA DAFTAR PRODUK BELI) -->
+            <div x-data="{ open: false }"
+                class="bg-[#ebf0f8] border border-indigo-200 rounded-[36px] p-6 flex flex-col justify-between min-h-[420px] shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+
+                <div x-show="!open" class="h-full flex flex-col justify-between items-start w-full cursor-pointer"
+                    @click="open = true">
+                    <div class="w-full flex justify-center py-6 relative">
+                        <div class="absolute w-32 h-32 bg-indigo-400/20 blur-2xl rounded-full"></div>
+                        <div class="text-7xl filter drop-shadow-md">🔬🧪</div>
+                    </div>
+                    <div class="w-full flex justify-between items-end mt-4">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-950 tracking-tight mb-1">Tentang Produk</h2>
+                            <span
+                                class="text-indigo-700 text-xs font-black uppercase tracking-wider bg-indigo-200/60 px-3 py-1 rounded-full">Pelajari
+                                Detail &rarr;</span>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-slate-950 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md">
+                            ➔</div>
+                    </div>
+                </div>
+
+                <div x-show="open" x-cloak class="h-full flex flex-col justify-between w-full">
+                    <div class="flex justify-between items-center pb-3 border-b border-indigo-200">
+                        <span class="font-black text-sm uppercase text-indigo-900 tracking-wider">Info Kita Clean</span>
+                        <button @click="open = false"
+                            class="px-3 py-1 bg-white hover:bg-slate-100 text-xs font-black rounded-lg uppercase border border-indigo-300 shadow-xs">&larr;
+                            Kembali</button>
+                    </div>
+
+                    <!-- Area Isi Edukasi/Penjelasan Lengkap -->
+                    <div class="flex-grow py-4 overflow-y-auto space-y-4">
+                        <div class="bg-white p-4 rounded-2xl border border-indigo-100 text-left shadow-xs">
+                            <p class="text-xs text-slate-700 font-bold leading-relaxed">
+                                Cairan sanitasi <span class="text-indigo-600 font-extrabold">Kita Clean</span> membunuh
+                                langsung mikroba parasit & jamur penyebab bau apek busa tebal secara tuntas, higienis &
+                                segar sepanjang hari.
+                            </p>
+                        </div>
+
+                        <div class="space-y-2 px-1">
+                            <div class="flex items-start gap-2">
+                                <span class="text-indigo-500 font-bold text-sm">✓</span>
+                                <p class="text-[11px] text-slate-600 font-medium"><strong
+                                        class="text-slate-900">Anti-Odour Tech:</strong> Menghilangkan bau hingga ke
+                                    serat terdalam, bukan sekadar menutupi bau.</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-indigo-500 font-bold text-sm">✓</span>
+                                <p class="text-[11px] text-slate-600 font-medium"><strong class="text-slate-900">Safe
+                                        Formula:</strong> Aman digunakan setiap hari tanpa merusak material kulit,
+                                    kanvas, maupun busa.</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-indigo-500 font-bold text-sm">✓</span>
+                                <p class="text-[11px] text-slate-600 font-medium"><strong
+                                        class="text-slate-900">Eco-Friendly:</strong> Ramah lingkungan dan tidak
+                                    meninggalkan noda residu kimia berbahaya.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- 5. KATEGORI: SEMUA PRODUK (PUSAT BELANJA SELURUH KOLEKSI) -->
+            <div x-data="{ open: false }"
+                class="bg-[#fef3c7] border border-amber-200 rounded-[36px] p-6 flex flex-col justify-between min-h-[420px] shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+
+                <div x-show="!open" class="h-full flex flex-col justify-between items-start w-full cursor-pointer"
+                    @click="open = true">
+                    <div class="w-full flex justify-center py-6 relative">
+                        <div class="absolute w-32 h-32 bg-amber-400/20 blur-2xl rounded-full"></div>
+                        <div class="text-7xl filter drop-shadow-md">🛍️</div>
+                    </div>
+                    <div class="w-full flex justify-between items-end mt-4">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-950 tracking-tight mb-1">Semua Produk</h2>
+                            <span
+                                class="text-amber-700 text-xs font-black uppercase tracking-wider bg-amber-200 px-3 py-1 rounded-full">Buka
+                                Semua Produk &rarr;</span>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-slate-950 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md">
+                            ➔</div>
+                    </div>
+                </div>
+
+                <div x-show="open" x-cloak class="h-full flex flex-col justify-between w-full">
+                    <div class="flex justify-between items-center pb-3 border-b border-amber-300">
+                        <span class="font-black text-sm uppercase text-amber-900 tracking-wider">Seluruh Koleksi</span>
+                        <button @click="open = false"
+                            class="px-3 py-1 bg-white hover:bg-slate-100 text-xs font-black rounded-lg uppercase border border-amber-400 shadow-xs">&larr;
+                            Kembali</button>
+                    </div>
+
+                    <div class="flex-grow py-4 grid grid-cols-2 gap-3 overflow-y-auto max-h-[300px]">
+                        <!-- Produk 1 -->
+                        <div class="bg-white p-3 rounded-2xl border shadow-xs text-center">
+                            <img src="assets/img/produk_morning_brew.jpeg"
+                                class="w-16 h-16 mx-auto object-cover rounded-xl">
+                            <h4 class="font-black text-[11px] uppercase text-slate-900 mt-1">Morning Brew</h4>
+                            <span class="text-[10px] font-bold text-[#4ca766] block">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Morning Brew', price: 15000, img: 'assets/img/produk_morning_brew.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1 bg-slate-900 text-white text-[9px] font-black rounded-lg uppercase">
+                                + Beli
+                            </button>
+                        </div>
+                        <!-- Produk 2 -->
+                        <div class="bg-white p-3 rounded-2xl border shadow-xs text-center">
+                            <img src="assets/img/produk_bubble_pop.jpeg"
+                                class="w-16 h-16 mx-auto object-cover rounded-xl">
+                            <h4 class="font-black text-[11px] uppercase text-slate-900 mt-1">Bubble Pop</h4>
+                            <span class="text-[10px] font-bold text-[#4ca766] block">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Bubble Pop', price: 15000, img: 'assets/img/produk_bubble_pop.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1 bg-slate-900 text-white text-[9px] font-black rounded-lg uppercase">
+                                + Beli
+                            </button>
+                        </div>
+                        <!-- Produk 3 -->
+                        <div class="bg-white p-3 rounded-2xl border shadow-xs text-center">
+                            <img src="assets/img/produk_sweet_dream.jpeg"
+                                class="w-16 h-16 mx-auto object-cover rounded-xl">
+                            <h4 class="font-black text-[11px] uppercase text-slate-900 mt-1">Sweet Dream</h4>
+                            <span class="text-[10px] font-bold text-[#4ca766] block">Rp15.000</span>
+                            <button
+                                @click="cart.push({id: Date.now(), name: 'Sweet Dream', price: 15000, img: 'assets/img/produk_sweet_dream.jpeg'}); updateCart(); showCartModal = true"
+                                class="w-full mt-2 py-1 bg-slate-900 text-white text-[9px] font-black rounded-lg uppercase">
+                                + Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <div class="fixed inset-0 z-50 overflow-y-auto" x-show="showEduModal" x-cloak>
-        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs" @click="showEduModal = false"></div>
-        <div class="flex min-h-full items-center justify-center p-4">
-            <div class="relative rounded-[28px] bg-white text-left shadow-2xl w-full max-w-2xl overflow-hidden border flex flex-col"
-                x-show="showEduModal" x-transition>
-                <div class="p-6 flex justify-between items-center" :style="'background-color: ' + selectedCategory.bg">
-                    <div><span class="text-[10px] font-black text-[#4ca766] uppercase tracking-wider">Panduan
-                            Penggunaan</span>
-                        <h3 class="text-xl font-black mt-0.5" x-text="selectedCategory.title"></h3>
+    <!-- ================= SIDE DRAWER: KERANJANG BELANJA ================= -->
+    <div class="fixed inset-0 z-50 flex justify-end" x-show="showCartModal" x-cloak x-transition>
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs" @click="showCartModal = false"></div>
+        <div class="relative w-full max-w-md bg-white h-full shadow-2xl p-6 flex flex-col z-10">
+            <div class="flex justify-between items-center pb-4 border-b">
+                <h2 class="text-2xl font-black uppercase">Keranjang</h2>
+                <button @click="showCartModal = false" class="text-3xl font-light cursor-pointer">×</button>
+            </div>
+            <div class="flex-grow overflow-y-auto py-4 space-y-4">
+                <template x-for="item in cart" :key="item.id">
+                    <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-2xl border">
+                        <img :src="item.img" class="w-14 h-14 object-cover rounded-xl border bg-white" alt="Item">
+                        <div class="flex-grow">
+                            <h4 class="font-extrabold uppercase text-xs text-slate-900" x-text="item.name"></h4>
+                            <p class="text-[#4ca766] font-black text-xs mt-0.5"
+                                x-text="'Rp' + item.price.toLocaleString('id-ID')"></p>
+                        </div>
+                        <button @click="cart = cart.filter(p => p.id !== item.id); updateCart()"
+                            class="text-red-500 p-2 cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <button @click="showEduModal = false"
-                        class="text-slate-500 text-2xl cursor-pointer">&times;</button>
+                </template>
+                <div x-show="cart.length === 0"
+                    class="h-full flex flex-col items-center justify-center text-slate-400 font-bold uppercase text-xs tracking-wider">
+                    Keranjang Kosong</div>
+            </div>
+            <div class="pt-4 border-t" x-show="cart.length > 0">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xs font-bold text-slate-500 uppercase">Total</span>
+                    <span class="text-xl font-black text-[#4ca766]"
+                        x-text="'Rp' + cart.reduce((sum, item) => sum + item.price, 0).toLocaleString('id-ID')"></span>
                 </div>
-                <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto text-sm font-medium text-slate-600">
-                    <div>
-                        <h4 class="font-black text-slate-900 uppercase text-xs">Varian:</h4>
-                        <p x-text="selectedCategory.variants" class="text-base text-[#4ca766] font-black mt-0.5"></p>
-                    </div>
-                    <div>
-                        <h4 class="font-black text-slate-900 uppercase text-xs">Efektivitas:</h4>
-                        <p x-text="selectedCategory.effectiveness" class="mt-0.5"></p>
-                    </div>
-                    <div>
-                        <h4 class="font-black text-slate-900 uppercase text-xs">Langkah Aplikasi:</h4>
-                        <ol class="list-decimal pl-4 space-y-1 mt-1"><template x-for="step in selectedCategory.steps">
-                                <li x-text="step"></li>
-                            </template></ol>
-                    </div>
-                </div>
-                <div class="p-4 bg-slate-50 border-t flex justify-between gap-4">
-                    <button @click="window.location.href='daftar_produk.html'"
-                        class="px-5 py-2.5 bg-[#4ca766] text-white text-xs font-black uppercase tracking-wider rounded-xl cursor-pointer">Lihat
-                        Produk</button>
-                    <button @click="showEduModal = false"
-                        class="px-5 py-2.5 bg-slate-900 text-white text-xs font-black uppercase tracking-wider rounded-xl cursor-pointer">Tutup</button>
-                </div>
+                <a href="pembayaran.html"
+                    class="w-full block py-4 bg-[#4ca766] text-white text-center font-extrabold rounded-2xl uppercase tracking-wider text-sm shadow-md">Lanjutkan
+                    Checkout</a>
             </div>
         </div>
     </div>
-    <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400 font-medium">
-        <p>© 2026 kitclean.id. Hak Cipta Dilindungi</p>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-transparent text-slate-400 py-12 text-center text-xs font-bold tracking-wide mt-auto">
+        <div>&copy; 2026 kitclean.id. Hak Cipta Dilindungi</div>
     </footer>
+    <!-- TEMPEL DI PALING BAWAH FILE KATALOG.HTML DAN LOKASI.HTML (DI ATAS TAG </body>) -->
+    <script>
+        // Mendengarkan semua klik di halaman secara live tanpa peduli kapan tombolnya dimuat
+        document.addEventListener("click", function (event) {
+            // Cari elemen tag <a> atau <button> terdekat yang sedang diklik oleh user
+            const tombolLogin = event.target.closest("a, button");
+
+            if (tombolLogin) {
+                const teksTombol = tombolLogin.textContent.toLowerCase();
+
+                // Jika tombol yang diklik mengandung kata 'login' atau 'daftar'
+                if (teksTombol.includes("login") || teksTeombol.includes("daftar")) {
+                    event.preventDefault(); // Hentikan link bawaan yang rusak/salah alamat
+                    window.location.href = "login.html"; // Paksa beralih ke halaman login baru Anda
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -5,19 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kita Clean - Anti Bau Anti Bakteri Fresh Seharian</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Tailwind CSS v3 Stable CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js Core CDN -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .text-shadow-hero {
-            text-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+            text-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         @keyframes slideLeftIn {
@@ -64,7 +71,15 @@
         }
 
         .nav-bounce-effect:hover {
-            transform: translateY(-3px) scale(1.15);
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        .hover-brand {
+            transition: color 0.2s ease;
+        }
+
+        .hover-brand:hover {
+            color: #4ca766 !important;
         }
 
         [x-cloak] {
@@ -73,11 +88,18 @@
     </style>
 </head>
 
-<body class="bg-[#e0f2fe] text-slate-900 min-h-screen flex flex-col" x-data="{ 
+<body
+    class="bg-gradient-to-b from-[#e0f2fe] via-[#e0f2fe] to-white text-slate-900 min-h-screen flex flex-col pt-4 bg-no-repeat"
+    x-data="{ 
     cart: JSON.parse(localStorage.getItem('kitaclean_cart') || '[]'),
-    showCartModal: false, openDropdown: false, mobileMenu: false,
+    showCartModal: false, 
+    openDropdown: false, 
+    mobileMenu: false,
+    showLoginModal: false,
+    showPesanModal: false,
     showDetailModal: false,
-    selectedProduct: {},
+    selectedProduct: { name: '', price: 0, img: '', bg: '#ffffff', desc: '' },
+    activeSubMenu: '', 
     updateCart() { localStorage.setItem('kitaclean_cart', JSON.stringify(this.cart)) },
     openDetail(name, price, img, bg, desc) {
         this.selectedProduct = { name, price, img, bg, desc };
@@ -85,45 +107,124 @@
     }
 }">
 
-    <nav class="bg-[#e0f2fe]/90 backdrop-blur-md w-full border-b border-sky-100 sticky top-0 z-50 shadow-xs">
-        <div class="max-w-full px-6 sm:px-10 lg:px-14">
-            <div class="flex justify-between h-28 items-center">
-                <a href="index.html"
-                    class="flex items-center h-28 transform transition duration-300 hover:-translate-y-1 hover:scale-105">
-                    <img src="assets/img/logo_kitaclean_slogan.jpeg" alt="Kita Clean Logo"
-                        class="h-28 w-auto object-contain py-2 mix-blend-multiply">
-                </a>
+    <!-- ================= NAVBAR SECTION ================= -->
+    <nav
+        class="sticky top-4 mx-4 sm:mx-10 lg:max-w-7xl lg:mx-auto bg-white rounded-3xl shadow-xl border border-sky-100 z-50 w-[calc(100%-2rem)] sm:w-[calc(100%-5rem)] lg:w-full">
+        <div class="px-6 sm:px-8 lg:px-10">
+            <div class="flex justify-between h-24 items-center">
+
+                <!-- LOGO BRAND -->
+                <div class="relative h-24 flex items-center group">
+                    <a href="index.html"
+                        class="flex items-center h-24 transform transition duration-300 hover:-translate-y-1 hover:scale-105 rounded-2xl p-1">
+                        <img src="assets/img/logo_kitaclean_slogan.jpeg" alt="Kita Clean Logo"
+                            class="h-24 w-auto object-contain py-2 mix-blend-multiply">
+                    </a>
+
+                    <div
+                        class="absolute left-0 top-[85%] invisible opacity-0 scale-95 group-hover:visible group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 w-72 rounded-[24px] bg-[#4ca766] text-white border-2 border-white p-5 shadow-2xl z-[100] flex flex-col space-y-2 pointer-events-none">
+                        <h4 class="font-black text-sm uppercase tracking-wider flex items-center gap-2">
+                            <span>✨</span> KITA CLEAN PREMIUM
+                        </h4>
+                        <p class="text-xs font-medium opacity-95 leading-relaxed">
+                            <strong>Slogan:</strong> Bersih itu Kita, Kita itu Bersih. Solusi pewangi premium anti
+                            bakteri pendukung aktivitas harian Tuan Muda!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu Navigasi -->
                 <div class="hidden md:flex items-center space-x-8 text-lg font-extrabold tracking-wide">
                     <a href="index.html" class="nav-bounce-effect text-[#4ca766]">Home</a>
+
+                    <!-- DROPDOWN KATALOG DENGAN POP-UP INFO -->
                     <div class="relative text-left" @mouseenter="openDropdown = true"
-                        @mouseleave="openDropdown = false">
+                        @mouseleave="openDropdown = false; activeSubMenu = ''">
                         <a href="katalog.html"
-                            class="nav-bounce-effect text-slate-700 hover:text-[#4ca766] flex items-center gap-2">
+                            class="nav-bounce-effect hover-brand flex items-center gap-2 py-4 cursor-pointer"
+                            :class="openDropdown ? 'text-[#4ca766]' : 'text-slate-700'">
                             <span>Katalog</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 transition-transform duration-200"
+                                :class="openDropdown ? 'rotate-180 text-[#4ca766]' : ''" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </a>
-                        <div x-show="openDropdown" x-cloak
-                            class="absolute left-1/2 -translate-x-1/2 mt-2 w-56 rounded-xl bg-white shadow-xl border border-slate-100 py-3 z-50 flex flex-col space-y-1 px-2">
-                            <a href="katalog.html?cat=all"
-                                class="w-full block px-4 py-2 text-sm text-slate-700 hover:text-[#4ca766] rounded-lg font-extrabold">Semua
-                                Produk</a>
-                            <a href="katalog.html?cat=sepatu"
-                                class="w-full block px-4 py-2 text-sm text-slate-700 hover:text-[#4ca766] rounded-lg font-extrabold">Parfum
-                                Sepatu</a>
-                            <a href="katalog.html?cat=helm"
-                                class="w-full block px-4 py-2 text-sm text-slate-700 hover:text-[#4ca766] rounded-lg font-extrabold">Parfum
-                                Helm</a>
+
+                        <div x-show="openDropdown" x-cloak x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-2"
+                            class="absolute left-1/2 -translate-x-1/2 mt-2 w-56 rounded-2xl bg-slate-50/95 shadow-2xl border-t-4 border-t-[#4ca766] border border-slate-200/60 py-3 z-50 flex flex-col space-y-1.5 px-2 before:content-[''] before:absolute before:-top-4 before:h-4 before:inset-x-0">
+
+                            <div class="relative" @mouseenter="activeSubMenu = 'all'">
+                                <a href="katalog.html?cat=all"
+                                    class="w-full block px-4 py-2.5 text-sm text-slate-700 bg-transparent border border-transparent hover:bg-white hover:text-[#4ca766] hover:shadow-[0_6px_15px_rgba(76,167,102,0.12)] hover:border-emerald-100 hover:-translate-y-0.5 hover:scale-[1.02] rounded-xl font-black tracking-wide transition-all duration-200 transform">
+                                    Semua Produk
+                                </a>
+                            </div>
+
+                            <div class="relative" @mouseenter="activeSubMenu = 'sepatu'">
+                                <a href="katalog.html?cat=sepatu"
+                                    class="w-full block px-4 py-2.5 text-sm text-slate-700 bg-transparent border border-transparent hover:bg-white hover:text-[#4ca766] hover:shadow-[0_6px_15px_rgba(76,167,102,0.12)] hover:border-emerald-100 hover:-translate-y-0.5 hover:scale-[1.02] rounded-xl font-black tracking-wide transition-all duration-200 transform">
+                                    Parfum Sepatu
+                                </a>
+                            </div>
+
+                            <div class="relative" @mouseenter="activeSubMenu = 'helm'">
+                                <a href="katalog.html?cat=helm"
+                                    class="w-full block px-4 py-2.5 text-sm text-slate-700 bg-transparent border border-transparent hover:bg-white hover:text-[#4ca766] hover:shadow-[0_6px_15px_rgba(76,167,102,0.12)] hover:border-emerald-100 hover:-translate-y-0.5 hover:scale-[1.02] rounded-xl font-black tracking-wide transition-all duration-200 transform">
+                                    Parfum Helm
+                                </a>
+                            </div>
+
+                            <!-- POP-UP INFO DI SAMPING DROPDOWN -->
+                            <div class="absolute left-full top-0 ml-4 w-64 rounded-2xl bg-white/95 border border-slate-200/80 shadow-2xl p-4 pointer-events-none transition-all duration-200"
+                                x-show="openDropdown && activeSubMenu !== ''" x-transition>
+
+                                <div x-show="activeSubMenu === 'all'"
+                                    x-transition:enter="transition ease-out duration-150" class="space-y-1">
+                                    <h5
+                                        class="text-[#4ca766] font-black text-xs uppercase tracking-wider flex items-center gap-1">
+                                        ✨ Koleksi Lengkap</h5>
+                                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">Jelajahi seluruh
+                                        varian formula pewangi premium anti-bakteri terlengkap dari Kita Clean dalam
+                                        satu halaman.</p>
+                                </div>
+
+                                <div x-show="activeSubMenu === 'sepatu'"
+                                    x-transition:enter="transition ease-out duration-150" class="space-y-1">
+                                    <h5
+                                        class="text-blue-500 font-black text-xs uppercase tracking-wider flex items-center gap-1">
+                                        👟 Spesialis Sepatu</h5>
+                                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">Formula khusus
+                                        penetral bau apek kain, kanvas, & kulit. Efektif membasmi jamur langsung dari
+                                        area insole.</p>
+                                </div>
+
+                                <div x-show="activeSubMenu === 'helm'"
+                                    x-transition:enter="transition ease-out duration-150" class="space-y-1">
+                                    <h5
+                                        class="text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-1">
+                                        🪖 Spesialis Helm</h5>
+                                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">Cepat kering,
+                                        tidak lengket di rambut, aman untuk busa helm. Menjaga kesegaran kepala seharian
+                                        penuh saat berkendara.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <a href="tentang-kami.html" class="nav-bounce-effect text-slate-700 hover:text-[#4ca766]">Tentang
-                        Kami</a>
-                    <a href="lokasi.html" class="nav-bounce-effect text-slate-700 hover:text-[#4ca766]">Lokasi</a>
+
+                    <!-- LINK DIBAWAH INI SUDAH DIUBAH MENJADI about.html -->
+                    <a href="about.html" class="nav-bounce-effect hover-brand text-slate-700">Tentang Kami</a>
+                    <a href="lokasi.html" class="nav-bounce-effect hover-brand text-slate-700">Lokasi</a>
+
                     <button @click="showCartModal = true"
-                        class="nav-bounce-effect p-1 relative text-slate-700 hover:text-[#4ca766] cursor-pointer">
-                        <svg class="w-6.5 h-6.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="nav-bounce-effect hover-brand p-1 relative text-slate-700 cursor-pointer">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
@@ -131,39 +232,192 @@
                             class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold"
                             x-text="cart.length" x-show="cart.length > 0"></span>
                     </button>
+
                     <span class="h-6 w-px bg-slate-300/50"></span>
-                    <a href="login.html"
-                        class="nav-bounce-effect px-6 py-3 border-2 border-slate-300 hover:border-[#4ca766] text-slate-700 hover:text-[#4ca766] text-base font-bold rounded-xl bg-white shadow-xs">Login
-                        / Daftar</a>
+
+                    <button @click="showLoginModal = true"
+                        class="px-6 py-3 bg-white border-2 border-slate-300 text-slate-700 text-base font-extrabold rounded-xl shadow-sm cursor-pointer transition-all duration-300 transform hover:text-[#4ca766] hover:border-[#4ca766] hover:-translate-y-1 hover:scale-105 hover:shadow-[0_12px_25px_rgba(76,167,102,0.25)]">
+                        Login / Daftar
+                    </button>
                 </div>
+
+                <!-- Mobile Menu Icons -->
                 <div class="flex md:hidden items-center space-x-6">
-                    <button @click="showCartModal = true" class="p-1 relative text-slate-700"><svg class="w-7 h-7"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button @click="showCartModal = true" class="p-1 relative text-slate-700 hover-brand">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg><span
+                        </svg>
+                        <span
                             class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center"
-                            x-text="cart.length" x-show="cart.length > 0"></span></button>
-                    <button @click="mobileMenu = !mobileMenu" class="text-slate-700"><svg class="w-8 h-8" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
+                            x-text="cart.length" x-show="cart.length > 0"></span>
+                    </button>
+                    <button @click="mobileMenu = !mobileMenu" class="text-slate-700 hover-brand">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg></button>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
-        <div x-show="mobileMenu" x-cloak
-            class="md:hidden bg-white px-6 pt-32 pb-8 fixed inset-x-0 top-0 z-45 shadow-2xl flex flex-col space-y-3 font-bold text-lg text-slate-700">
-            <a href="index.html" class="text-[#4ca766] px-3 py-2">Home</a>
-            <a href="katalog.html" class="px-3 py-2">Katalog</a>
-            <a href="tentang-kami.html" class="px-3 py-2">Tentang Kami</a>
-            <a href="lokasi.html" class="px-3 py-2">Lokasi</a>
-            <a href="login.html" class="w-full py-3 bg-[#4ca766] text-white text-center rounded-2xl mt-4 block">Login /
-                Daftar</a>
-        </div>
     </nav>
 
-    <div x-show="showCartModal" x-cloak class="fixed inset-0 z-50 flex justify-end">
+    <!-- ================= MAIN CONTENT & HERO BANNER ================= -->
+    <main class="flex-grow mt-4">
+
+        <!-- FIXED HERO CONTAINER -->
+        <div
+            class="mx-4 sm:mx-10 lg:max-w-7xl lg:mx-auto rounded-[32px] relative h-[380px] sm:h-[480px] lg:h-[550px] overflow-hidden bg-black shadow-lg">
+
+            <!-- Video Banner -->
+            <video autoplay loop muted playsinline
+                class="absolute top-0 left-0 w-full h-full object-cover object-center">
+                <source src="assets/video/produk_morning_brew_2.mp4" type="video/mp4">
+            </video>
+
+            <!-- Lapisan gelap super tipis -->
+            <div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+
+            <!-- Wadah Teks Konten Utama -->
+            <div class="absolute inset-0 flex items-center px-6 sm:px-16 lg:px-24 z-10">
+                <div class="max-w-xs sm:max-w-md lg:max-w-xl w-full">
+                    <h1
+                        class="text-3xl sm:text-5xl lg:text-[56px] font-black text-white tracking-wide leading-[1.15] text-shadow-hero uppercase flex flex-col gap-1 sm:gap-2">
+                        <span class="animate-fade-1 block whitespace-nowrap">Anti Bau</span>
+                        <span class="animate-fade-2 block whitespace-nowrap">Anti Bakteri</span>
+                        <span class="animate-fade-3 block whitespace-nowrap">Fresh Seharian</span>
+                    </h1>
+
+                    <div class="pt-6 sm:pt-8 animate-btn">
+                        <button @click="showPesanModal = true"
+                            class="px-6 py-3 sm:px-10 sm:py-4 bg-[#4ca766] border-2 border-transparent text-white font-black text-sm sm:text-lg rounded-xl sm:rounded-2xl shadow-[0_10px_25px_rgba(76,167,102,0.3)] inline-block uppercase cursor-pointer tracking-wider transition-all duration-300 transform hover:bg-white hover:text-[#4ca766] hover:border-[#4ca766] hover:-translate-y-1 hover:scale-105 hover:shadow-[0_15px_35px_rgba(76,167,102,0.45)]">
+                            Pesan Sekarang
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CARD DAFTAR PRODUK UTAMA ================= -->
+        <div class="py-24 max-w-7xl mx-auto px-6 sm:px-10 lg:px-14">
+            <h2 class="text-4xl font-black text-slate-900 mb-16 uppercase tracking-tight">Pilihan Utama Kami</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+                <!-- Card 1: Morning Brew -->
+                <div class="flex flex-col items-center cursor-pointer p-5 bg-[#ebd9b4] rounded-[36px] shadow-lg border border-[#dfccaa] hover:-translate-y-4 transition duration-300"
+                    @click="openDetail('Morning Brew', 15000, 'assets/img/produk_morning_brew.jpeg', '#ebd9b4', 'Aroma Kopi Segar Menyegarkan yang diformulasikan khusus untuk menetralisir bau apek bandel pada sepatu dan helm-mu!')">
+                    <div class="rounded-[28px] w-full aspect-square overflow-hidden shadow-md bg-white">
+                        <img src="assets/img/produk_morning_brew.jpeg" class="w-full h-full object-cover"
+                            alt="Morning Brew">
+                    </div>
+                    <h3 class="text-2xl font-black text-amber-950 mt-6 uppercase">Morning Brew</h3>
+                    <span
+                        class="mt-2 px-4 py-1.5 bg-amber-950 text-[#ebd9b4] text-xs font-black rounded-full uppercase">Lihat
+                        Detail</span>
+                </div>
+
+                <!-- Card 2: Sweet Dream -->
+                <div class="flex flex-col items-center cursor-pointer p-5 bg-[#a9a7d0] rounded-[36px] shadow-lg border border-[#9b99c4] hover:-translate-y-4 transition duration-300"
+                    @click="openDetail('Sweet Dream', 15000, 'assets/img/produk_sweet_dream.jpeg', '#a9a7d0', 'Sensasi relaksasi aroma Lavender premium yang super lembut dan tahan lama.')">
+                    <div class="rounded-[28px] w-full aspect-square overflow-hidden shadow-md bg-white">
+                        <img src="assets/img/produk_sweet_dream.jpeg" class="w-full h-full object-cover"
+                            alt="Sweet Dream">
+                    </div>
+                    <h3 class="text-2xl font-black text-indigo-950 mt-6 uppercase">Sweet Dream</h3>
+                    <span
+                        class="mt-2 px-4 py-1.5 bg-indigo-950 text-[#a9a7d0] text-xs font-black rounded-full uppercase">Lihat
+                        Detail</span>
+                </div>
+
+                <!-- Card 3: Bubble Pop -->
+                <div class="flex flex-col items-center cursor-pointer p-5 bg-[#df93a9] rounded-[36px] shadow-lg border border-[#d2859b] hover:-translate-y-4 transition duration-300"
+                    @click="openDetail('Bubble Pop', 15000, 'assets/img/produk_bubble_pop.jpeg', '#df93a9', 'Wangi permen karet yang manis, ceria, dan penuh energi harian.')">
+                    <div class="rounded-[28px] w-full aspect-square overflow-hidden shadow-md bg-white">
+                        <img src="assets/img/produk_bubble_pop.jpeg" class="w-full h-full object-cover"
+                            alt="Bubble Pop">
+                    </div>
+                    <h3 class="text-2xl font-black text-rose-950 mt-6 uppercase">Bubble Pop</h3>
+                    <span
+                        class="mt-2 px-4 py-1.5 bg-rose-950 text-[#df93a9] text-xs font-black rounded-full uppercase">Lihat
+                        Detail</span>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= MODAL POP-UP AREA ================= -->
+
+    <!-- Modal Metode Pemesanan -->
+    <div class="fixed inset-0 z-[100] flex items-center justify-center p-4" x-show="showPesanModal" x-cloak
+        x-transition>
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" @click="showPesanModal = false"></div>
+        <div class="relative bg-gradient-to-br from-[#4ca766] to-[#367c4b] border-2 border-white/30 rounded-[36px] shadow-2xl w-full max-w-md overflow-hidden text-white p-8 z-10"
+            x-show="showPesanModal" x-transition>
+            <button @click="showPesanModal = false"
+                class="absolute top-6 right-6 text-white/70 hover:text-white text-3xl font-light cursor-pointer">&times;</button>
+            <div class="text-center mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 bg-white/10 border border-white/20 rounded-2xl text-3xl mb-4">
+                    🛒</div>
+                <h3 class="text-3xl font-black uppercase tracking-wide">Metode Pemesanan</h3>
+            </div>
+            <div class="space-y-4">
+                <a href="https://wa.me/6281211651921" target="_blank"
+                    class="flex items-center gap-5 bg-white text-slate-800 p-4 rounded-2xl border-2 border-transparent font-extrabold transition duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:text-emerald-600 hover:border-emerald-400 group">
+                    <div
+                        class="bg-emerald-50 text-emerald-500 w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold">
+                        💬</div>
+                    <div>
+                        <h4 class="text-base uppercase font-black text-slate-900 group-hover:text-emerald-600">Order via
+                            WhatsApp</h4>
+                        <p class="text-[11px] text-slate-500 font-semibold">Konsultasi langsung cepat tanggap</p>
+                    </div>
+                </a>
+                <a href="katalog.html"
+                    class="flex items-center gap-5 bg-white text-slate-800 p-4 rounded-2xl border-2 border-transparent font-extrabold transition duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:text-[#4ca766] hover:border-emerald-400 group">
+                    <div
+                        class="bg-amber-50 text-amber-500 w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold">
+                        ⚡</div>
+                    <div>
+                        <h4 class="text-base uppercase font-black text-slate-900 group-hover:text-[#4ca766]">Order via
+                            Web</h4>
+                        <p class="text-[11px] text-slate-500 font-semibold">Pilih katalog bebas otomatis</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Produk Dinamik -->
+    <div class="fixed inset-0 z-[100] flex items-center justify-center p-4" x-show="showDetailModal" x-cloak
+        x-transition>
+        <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-md" @click="showDetailModal = false"></div>
+        <div class="relative rounded-[32px] shadow-2xl max-w-md w-full overflow-hidden text-slate-900 p-8 border-4 border-white z-10"
+            :style="'background-color: ' + selectedProduct.bg" x-show="showDetailModal" x-transition>
+            <button @click="showDetailModal = false"
+                class="absolute top-5 right-6 text-slate-700 hover:text-black text-3xl font-light cursor-pointer">&times;</button>
+            <div class="flex flex-col items-center text-center">
+                <div
+                    class="bg-white p-4 rounded-2xl shadow-md max-w-[220px] aspect-square flex items-center justify-center mb-6">
+                    <img :src="selectedProduct.img" class="w-full h-full object-cover rounded-xl" alt="Detail">
+                </div>
+                <h3 class="text-3xl font-black uppercase text-slate-900" x-text="selectedProduct.name"></h3>
+                <p class="text-xs text-slate-800 mt-3 font-semibold" x-text="selectedProduct.desc"></p>
+                <div class="text-3xl font-black text-[#4ca766] mt-5 bg-white/95 px-6 py-2 rounded-full shadow-md"
+                    x-text="'Rp' + selectedProduct.price?.toLocaleString('id-ID')"></div>
+                <button
+                    @click="cart.push({id: Date.now(), name: selectedProduct.name, price: selectedProduct.price, img: selectedProduct.img}); updateCart(); showDetailModal = false; showCartModal = true"
+                    class="w-full py-4 bg-slate-900 hover:bg-black text-white font-black rounded-xl mt-6 uppercase text-xs shadow-md transition transform hover:scale-[1.02]">
+                    Tambahkan Ke Keranjang
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Drawer Sidebar Keranjang Belanja -->
+    <div class="fixed inset-0 z-50 flex justify-end" x-show="showCartModal" x-cloak x-transition>
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs" @click="showCartModal = false"></div>
         <div class="relative w-full max-w-md bg-white h-full shadow-2xl p-6 flex flex-col z-10">
             <div class="flex justify-between items-center pb-4 border-b">
@@ -173,14 +427,14 @@
             <div class="flex-grow overflow-y-auto py-4 space-y-4">
                 <template x-for="item in cart" :key="item.id">
                     <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-2xl border">
-                        <img :src="item.img" class="w-16 h-16 object-cover rounded-xl">
+                        <img :src="item.img" class="w-16 h-16 object-cover rounded-xl" alt="Item">
                         <div class="flex-grow">
                             <h4 class="font-extrabold uppercase text-sm" x-text="item.name"></h4>
                             <p class="text-[#4ca766] font-bold text-sm"
                                 x-text="'Rp' + item.price.toLocaleString('id-ID')"></p>
                         </div>
                         <button @click="cart = cart.filter(p => p.id !== item.id); updateCart()"
-                            class="text-red-500 p-2 cursor-pointer">
+                            class="text-red-500 p-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7"></path>
@@ -188,99 +442,41 @@
                         </button>
                     </div>
                 </template>
-                <div x-show="cart.length === 0"
-                    class="h-full flex flex-col items-center justify-center text-slate-400 font-bold uppercase">
-                    Keranjang Kosong</div>
             </div>
             <div class="pt-4 border-t" x-show="cart.length > 0">
-                <div class="flex justify-between items-center mb-4"><span
-                        class="text-sm font-bold text-slate-500 uppercase">Total</span><span
-                        class="text-xl font-black text-[#4ca766]"
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-bold text-slate-500 uppercase">Total</span>
+                    <span class="text-xl font-black text-[#4ca766]"
                         x-text="'Rp' + cart.reduce((sum, item) => sum + item.price, 0).toLocaleString('id-ID')"></span>
                 </div>
                 <a href="pembayaran.html"
-                    class="w-full block py-4 bg-[#4ca766] text-white text-center font-extrabold rounded-2xl uppercase tracking-wider shadow-md">Lanjutkan
-                    Checkout</a>
+                    class="w-full block py-4 bg-[#4ca766] text-white text-center font-extrabold rounded-2xl uppercase tracking-wider shadow-md">
+                    Lanjutkan Checkout
+                </a>
             </div>
         </div>
     </div>
 
-    <main class="flex-grow">
-        <div class="relative w-full h-[520px] md:h-[600px] overflow-hidden bg-[#88b0ca]">
-            <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover">
-                <source src="assets/video/produk_morning_brew_2.mp4" type="video/mp4">
-            </video>
-            <div class="absolute inset-0 bg-black/5"></div>
-            <div class="absolute inset-0 flex items-center px-6 sm:px-12 lg:px-20">
-                <div>
-                    <h1
-                        class="text-4xl sm:text-5xl lg:text-[56px] font-black text-white tracking-wide leading-[1.2] text-shadow-hero uppercase flex flex-col">
-                        <span class="animate-fade-1">Anti Bau</span><span class="animate-fade-2">Anti
-                            Bakteri</span><span class="animate-fade-3">Fresh Seharian</span>
-                    </h1>
-                    <div class="pt-4 animate-btn">
-                        <a href="katalog.html"
-                            class="px-8 py-4 bg-[#4ca766] hover:bg-[#3f9154] text-white font-extrabold rounded-xl transition shadow-lg inline-block uppercase">Pesan
-                            Sekarang</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="py-24 max-w-7xl mx-auto px-6 sm:px-10 lg:px-14">
-            <h2 class="text-4xl font-black text-slate-900 mb-16 uppercase">Pilihan Unggulan</h2>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                <div class="flex flex-col items-center cursor-pointer p-4 bg-white rounded-[32px] shadow-sm border border-sky-100 hover:-translate-y-4 transition duration-300 group"
-                    @click="openDetail('Morning Brew', 15000, 'assets/img/produk_morning_brew.jpeg', '#ebd9b4', 'Aroma Kopi Segar Menyegarkan untuk Menghilangkan Bau Apek')">
-                    <div class="rounded-[24px] w-full aspect-square overflow-hidden"><img
-                            src="assets/img/produk_morning_brew.jpeg" class="w-full h-full object-cover"></div>
-                    <h3 class="text-2xl font-black text-slate-900 mt-6 uppercase">Morning Brew</h3>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer p-4 bg-white rounded-[32px] shadow-sm border border-sky-100 hover:-translate-y-4 transition duration-300 group"
-                    @click="openDetail('Sweet Dream', 15000, 'assets/img/produk_sweet_dream.jpeg', '#a9a7d0', 'Aroma Lavender yang Tenang dan Soft')">
-                    <div class="rounded-[24px] w-full aspect-square overflow-hidden"><img
-                            src="assets/img/produk_sweet_dream.jpeg" class="w-full h-full object-cover"></div>
-                    <h3 class="text-2xl font-black text-slate-900 mt-6 uppercase">Sweet Dream</h3>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer p-4 bg-white rounded-[32px] shadow-sm border border-sky-100 hover:-translate-y-4 transition duration-300 group"
-                    @click="openDetail('Bubble Pop', 15000, 'assets/img/produk_bubble_pop.jpeg', '#df93a9', 'Aroma Permen Karet Manis Ceria')">
-                    <div class="rounded-[24px] w-full aspect-square overflow-hidden"><img
-                            src="assets/img/produk_bubble_pop.jpeg" class="w-full h-full object-cover"></div>
-                    <h3 class="text-2xl font-black text-slate-900 mt-6 uppercase">Bubble Pop</h3>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div class="fixed inset-0 z-50 overflow-y-auto" x-show="showDetailModal" x-cloak>
-        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-md" @click="showDetailModal = false"></div>
-        <div class="flex min-h-full items-center justify-center p-4">
-            <div
-                class="relative rounded-[28px] bg-white shadow-2xl max-w-3xl w-full grid md:grid-cols-2 border overflow-hidden">
-                <div class="p-6 flex items-center justify-center" :style="'background-color: ' + selectedProduct.bg">
-                    <img :src="selectedProduct.img" class="w-full aspect-square object-cover rounded-2xl">
-                </div>
-                <div class="p-8 flex flex-col justify-between">
-                    <button @click="showDetailModal = false"
-                        class="absolute top-6 right-6 text-slate-400 text-2xl cursor-pointer">×</button>
-                    <div>
-                        <h3 class="text-2xl font-extrabold text-slate-900 uppercase" x-text="selectedProduct.name"></h3>
-                        <p class="text-sm text-slate-500 mt-2" x-text="selectedProduct.desc"></p>
-                        <div class="text-2xl font-black text-[#4ca766] mt-4"
-                            x-text="'Rp' + selectedProduct.price?.toLocaleString('id-ID')"></div>
-                    </div>
-                    <button
-                        @click="cart.push({id: Date.now(), name: selectedProduct.name, price: selectedProduct.price, img: selectedProduct.img}); updateCart(); showDetailModal = false; showCartModal = true"
-                        class="w-full py-4 bg-[#4ca766] text-white font-semibold rounded-xl mt-6 cursor-pointer uppercase tracking-wider">Tambahkan
-                        ke Keranjang</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-white text-[#757575] py-7 text-center border-t border-slate-100 text-sm">
-        <div>© 2026 kitclean.id. Hak Cipta Dilindungi</div>
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-transparent text-slate-400 py-12 text-center text-xs font-bold tracking-wide mt-auto">
+        <div>&copy; 2026 kitclean.id. Hak Cipta Dilindungi</div>
     </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("a, button").forEach(el => {
+                if (el.textContent.toLowerCase().includes("login") || el.textContent.toLowerCase().includes("daftar")) {
+                    el.style.cursor = "pointer";
+                    if (el.tagName === "A") {
+                        el.setAttribute("href", "login.html");
+                    }
+                    el.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        window.location.href = "login.html";
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
